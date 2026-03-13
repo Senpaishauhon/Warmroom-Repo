@@ -11,6 +11,8 @@ void PlayerInit(Player* player)
 
 void PlayerUpdate(Player* player, Camera2D camera)
 {
+    player->prevPos = player->pos;
+
     float dt = GetFrameTime();
 
     // MOVEMENT

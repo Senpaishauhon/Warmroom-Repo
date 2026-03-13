@@ -4,12 +4,9 @@ Camera2D CreateCamera()
 {
     Camera2D camera = { 0 };
 
-    camera.target.x = 0.0f;
-    camera.target.y = 0.0f;
+    camera.target = Vector2{ 0.0f, 0.0f };
 
-    // center of 512x512 virtual screen
-    camera.offset.x = 256.0f;
-    camera.offset.y = 256.0f;
+    camera.offset = Vector2{ 256.0f, 256.0f };
 
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;

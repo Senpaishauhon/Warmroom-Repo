@@ -31,6 +31,12 @@
     <Filter Include="Source Files\camera">
       <UniqueIdentifier>{0f2f0ebd-01b5-4e26-a911-21e7046ca300}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\assets">
+      <UniqueIdentifier>{4200c8f0-1376-4de3-ac0a-a5ad65c68c98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assets\maps">
+      <UniqueIdentifier>{194431f3-e50e-453b-8291-4fc2863b6df8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -49,9 +55,6 @@
       <Filter>Source Files\level</Filter>
     </ClCompile>
     <ClCompile Include="core\save.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\game.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="player\player.cpp">
@@ -77,14 +80,49 @@
     <ClInclude Include="core\save.h">
       <Filter>Source Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="core\game.h">
-      <Filter>Source Files\core</Filter>
-    </ClInclude>
     <ClInclude Include="player\player.h">
       <Filter>Source Files\player</Filter>
     </ClInclude>
     <ClInclude Include="camera\camera.h">
       <Filter>Source Files\camera</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\maps\level1_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level1.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level6.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level5.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level4.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level3.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level2.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level2_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level3_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level4_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level5_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level6_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -4,6 +4,8 @@
 typedef struct
 {
     Vector2 pos;
+    Vector2 prevPos;
+
     float speed;
 
     Vector2 bulletPos;

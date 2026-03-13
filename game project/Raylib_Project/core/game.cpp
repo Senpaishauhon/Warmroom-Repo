@@ -8,7 +8,10 @@ void GameInit(Game* game)
 
     PlayerInit(&game->player);
     EnemyInit(&game->enemy);
-    LevelInit(&game->level);
+    LevelLoad(&level, &enemy, 1);
+    player.pos = level.playerSpawn;
+
+    game->player.pos = game->level.playerSpawn;
 }
 
 void GameUpdate(Game* game)
@@ -22,6 +25,8 @@ void GameUpdate(Game* game)
     }
     else if (game->state == GAME_PLAY)
     {
+        PlayerUpdate(&game->player, camera);
+
         EnemyUpdate(&game->enemy, &game->player, (float)game->difficulty);
         LevelUpdate(&game->level, &game->player);
 
@@ -31,7 +36,8 @@ void GameUpdate(Game* game)
         },
             Rectangle {
             game->enemy.pos.x, game->enemy.pos.y, 20, 20
-        }))
+        }
+        ))
         {
             game->state = GAME_MENU;
         }
@@ -54,4 +60,5 @@ void GameDraw(Game* game)
 
 void GameUnload(Game* game)
 {
+    UnloadTexture(game->level.mapTexture);
 }

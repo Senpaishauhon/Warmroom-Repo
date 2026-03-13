@@ -1,16 +1,12 @@
 #include "enemy.h"
 
-void EnemyInit(Enemy* enemy)
+void EnemyInit(Enemy* enemy, Vector2 pos)
 {
-    enemy->pos.x = 400.0f;
-    enemy->pos.y = 100.0f;
-
-    enemy->startY = enemy->pos.y;
-
+    enemy->pos = pos;
+    enemy->startY = pos.y;
     enemy->speed = 100.0f;
     enemy->alive = true;
 }
-
 bool EnemyUpdate(Enemy* enemy, Player* player, float difficulty)
 {
     if (!enemy->alive) return false;

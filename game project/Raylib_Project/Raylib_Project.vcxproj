@@ -140,7 +140,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera\camera.cpp" />
-    <ClCompile Include="core\game.cpp" />
     <ClCompile Include="core\save.cpp" />
     <ClCompile Include="enemy\enemy.cpp" />
     <ClCompile Include="level\level.cpp" />
@@ -151,13 +150,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\camera.h" />
-    <ClInclude Include="core\game.h" />
     <ClInclude Include="core\save.h" />
     <ClInclude Include="enemy\enemy.h" />
     <ClInclude Include="level\level.h" />
     <ClInclude Include="player\player.h" />
     <ClInclude Include="ui\menu.h" />
     <ClInclude Include="ui\settings.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\maps\level1.png" />
+    <Image Include="assets\maps\level1_logic.png" />
+    <Image Include="assets\maps\level2.png" />
+    <Image Include="assets\maps\level2_logic.png" />
+    <Image Include="assets\maps\level3.png" />
+    <Image Include="assets\maps\level3_logic.png" />
+    <Image Include="assets\maps\level4.png" />
+    <Image Include="assets\maps\level4_logic.png" />
+    <Image Include="assets\maps\level5.png" />
+    <Image Include="assets\maps\level5_logic.png" />
+    <Image Include="assets\maps\level6.png" />
+    <Image Include="assets\maps\level6_logic.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

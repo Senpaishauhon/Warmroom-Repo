@@ -13,6 +13,17 @@ enum GameState
     CUTSCENE
 };
 
+void ResetGame(Level* level, EnemyManager* enemies, Player* player)
+{
+    PlayerInit(player);
+
+    enemies->count = 0;
+
+    LevelLoad(level, enemies, 1);
+
+    player->pos = level->playerSpawn;
+}
+
 int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -34,21 +45,17 @@ int main()
     Player player;
     PlayerInit(&player);
 
-    Enemy enemy;
-    EnemyInit(&enemy);
+    EnemyManager enemies = { 0 };
 
-    Level level;
-    LevelInit(&level);
+    Level* level = new Level();
+    LevelLoad(level, &enemies, 1);
 
-    int mapWidth = level.width;
-    int mapHeight = level.height;
+    player.pos = level->playerSpawn;
 
     float difficulty = 1.0f;
 
     while (!WindowShouldClose())
     {
-        // -------- SCALE CALCULATION --------
-
         float scaleX = (float)GetScreenWidth() / GAME_WIDTH;
         float scaleY = (float)GetScreenHeight() / GAME_HEIGHT;
         float scale = scaleX < scaleY ? scaleX : scaleY;
@@ -56,30 +63,46 @@ int main()
         float offsetX = (GetScreenWidth() - GAME_WIDTH * scale) / 2;
         float offsetY = (GetScreenHeight() - GAME_HEIGHT * scale) / 2;
 
-        // Convert mouse to game space
         Vector2 mouse = GetMousePosition();
         Vector2 mouseGame;
+
         mouseGame.x = (mouse.x - offsetX) / scale;
         mouseGame.y = (mouse.y - offsetY) / scale;
 
-        // -------- UPDATE --------
+        // ---------- UPDATE ----------
 
         if (gameState == GAMEPLAY)
         {
             PlayerUpdate(&player, camera);
 
-            if (EnemyUpdate(&enemy, &player, difficulty))
+            // enemy updates
+            // enemy updates
+            for (int i = 0; i < enemies.count; i++)
             {
-                gameState = MENU;
-
-                PlayerInit(&player);
-                EnemyInit(&enemy);
-                LevelInit(&level);
+                if (EnemyUpdate(&enemies.enemies[i], &player, difficulty))
+                {
+                    ResetGame(level, &enemies, &player);
+                    gameState = MENU;
+                }
             }
 
-            LevelUpdate(&level, &player);
+            // level collision + portal
+            if (LevelUpdate(level, &player))
+            {
+                int nextLevel = level->currentLevel + 1;
 
-            UpdateCameraPlayer(&camera, player.pos, mapWidth, mapHeight);
+                if (nextLevel > 6)
+                {
+                    gameState = CUTSCENE;
+                }
+                else
+                {
+                    LevelLoad(level, &enemies, nextLevel);
+                    player.pos = level->playerSpawn;
+                }
+            }
+
+            UpdateCameraPlayer(&camera, player.pos, level->width, level->height);
 
             if (IsKeyPressed(KEY_ESCAPE))
                 gameState = PAUSE;
@@ -90,7 +113,7 @@ int main()
                 gameState = GAMEPLAY;
         }
 
-        // -------- MENU INPUT --------
+        // ---------- MENU INPUT ----------
 
         if (gameState == MENU && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
@@ -98,7 +121,10 @@ int main()
             Rectangle exitBtn = { 196,280,120,40 };
 
             if (CheckCollisionPointRec(mouseGame, playBtn))
+            {
+                ResetGame(level, &enemies, &player);
                 gameState = DIFFICULTY;
+            }
 
             if (CheckCollisionPointRec(mouseGame, exitBtn))
                 CloseWindow();
@@ -127,10 +153,13 @@ int main()
             Rectangle exitBtn = { 200,310,120,30 };
 
             if (CheckCollisionPointRec(mouseGame, exitBtn))
+            {
+                ResetGame(level, &enemies, &player);
                 gameState = MENU;
+            }
         }
 
-        // -------- DRAW TO 512x512 --------
+        // ---------- DRAW GAME ----------
 
         BeginTextureMode(target);
         ClearBackground(RAYWHITE);
@@ -139,14 +168,17 @@ int main()
         {
             BeginMode2D(camera);
 
-            LevelDraw(&level);
+            LevelDraw(level);
             PlayerDraw(&player);
-            EnemyDraw(&enemy);
+
+            for (int i = 0; i < enemies.count; i++)
+            {
+                EnemyDraw(&enemies.enemies[i]);
+            }
 
             EndMode2D();
         }
 
-        // MENU
         if (gameState == MENU)
         {
             DrawText("DUNGEON GAME", 150, 120, 30, BLACK);
@@ -158,7 +190,6 @@ int main()
             DrawText("EXIT", 240, 290, 20, BLACK);
         }
 
-        // DIFFICULTY
         if (gameState == DIFFICULTY)
         {
             DrawText("SELECT DIFFICULTY", 120, 120, 30, BLACK);
@@ -170,7 +201,6 @@ int main()
             DrawText("HARD", 235, 290, 20, BLACK);
         }
 
-        // PAUSE
         if (gameState == PAUSE)
         {
             DrawRectangle(140, 120, 230, 220, Fade(DARKGRAY, 0.9f));
@@ -195,16 +225,28 @@ int main()
             DrawText("EXIT TO MENU", 205, 315, 14, WHITE);
         }
 
-        EndTextureMode();
+        if (gameState == CUTSCENE)
+        {
+            DrawText("CONGRATS!", 180, 200, 40, BLACK);
+            DrawText("YOU CLEARED THE GAME", 120, 260, 20, BLACK);
+            DrawText("PRESS ENTER", 190, 320, 20, GRAY);
 
-        // -------- DRAW TO WINDOW --------
+            if (IsKeyPressed(KEY_ENTER))
+            {
+                ResetGame(level, &enemies, &player);
+                gameState = MENU;
+            }
+        }
+
+        EndTextureMode();
 
         BeginDrawing();
         ClearBackground(BLACK);
 
         Rectangle source = { 0,0,(float)GAME_WIDTH,-(float)GAME_HEIGHT };
 
-        Rectangle dest = {
+        Rectangle dest =
+        {
             offsetX,
             offsetY,
             GAME_WIDTH * scale,
