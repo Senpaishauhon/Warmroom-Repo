@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="camera\camera.cpp" />
     <ClCompile Include="core\save.cpp" />
+    <ClCompile Include="cutscene\cutscene.cpp" />
     <ClCompile Include="enemy\enemy.cpp" />
     <ClCompile Include="level\level.cpp" />
     <ClCompile Include="main.cpp" />
@@ -151,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="camera\camera.h" />
     <ClInclude Include="core\save.h" />
+    <ClInclude Include="cutscene\cutscene.h" />
     <ClInclude Include="enemy\enemy.h" />
     <ClInclude Include="level\level.h" />
     <ClInclude Include="player\player.h" />

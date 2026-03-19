@@ -8,10 +8,25 @@ typedef struct
 
     float speed;
 
-    Vector2 bulletPos;
-    Vector2 bulletDir;
-    float bulletLife;
-    bool bulletActive;
+    // --- ARROW & BOW ---
+    Vector2 arrowPos;
+    Vector2 arrowDir;
+    float arrowAngle;
+    bool arrowActive;
+
+    Texture2D arrowTex;
+    Texture2D bowTex;
+    float bowAngle;
+
+    // --- ANIMATION VARIABLES ---
+    Texture2D idleFrames[2];
+    Texture2D runBodyFrames[2];
+    Texture2D runLegFrames[9];
+
+    float animTime; // Tracks the 1-second animation cycle
+    int facingDir;
+    bool isMoving;
+    bool wasMoving; // Used to reset the animation smoothly when stopping/starting
 
 } Player;
 

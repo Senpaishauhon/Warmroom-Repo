@@ -3,32 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\level\\level.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:level\\level.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\level\\level.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:level\\level.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\cutscene\\cutscene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:cutscene\\cutscene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\enemy\\enemy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:enemy\\enemy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\enemy\\enemy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:enemy\\enemy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:player\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\camera\\camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:camera\\camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:player\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\cutscene\\cutscene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:cutscene\\cutscene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7E49CA62-E6A8-403C-B1AF-56B0B679515D}|Raylib_Project.vcxproj|solutionrelative:player\\player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,102 +34,84 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "level.cpp",
-              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\level\\level.cpp",
-              "RelativeDocumentMoniker": "level\\level.cpp",
-              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\level\\level.cpp*",
-              "RelativeToolTip": "level\\level.cpp*",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAAAGYAAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-13T11:56:48.067Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "level.h",
-              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\level\\level.h",
-              "RelativeDocumentMoniker": "level\\level.h",
-              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\level\\level.h",
-              "RelativeToolTip": "level\\level.h",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAUAAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-03-13T11:56:31.557Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "enemy.cpp",
-              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\enemy\\enemy.cpp",
-              "RelativeDocumentMoniker": "enemy\\enemy.cpp",
-              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\enemy\\enemy.cpp",
-              "RelativeToolTip": "enemy\\enemy.cpp",
-              "ViewState": "AgIAABcAAAAAAAAAAAAAADMAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-13T11:55:41.096Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "enemy.h",
-              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\enemy\\enemy.h",
-              "RelativeDocumentMoniker": "enemy\\enemy.h",
-              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\enemy\\enemy.h",
-              "RelativeToolTip": "enemy\\enemy.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-03-13T11:37:03.214Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "player.cpp",
-              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.cpp",
-              "RelativeDocumentMoniker": "player\\player.cpp",
-              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.cpp",
-              "RelativeToolTip": "player\\player.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-12T13:42:13.751Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "camera.cpp",
               "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\camera\\camera.cpp",
               "RelativeDocumentMoniker": "camera\\camera.cpp",
               "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\camera\\camera.cpp",
               "RelativeToolTip": "camera\\camera.cpp",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAACIAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-12T13:26:30.142Z",
+              "WhenOpened": "2026-03-19T12:09:50.188Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "cutscene.cpp",
+              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\cutscene\\cutscene.cpp",
+              "RelativeDocumentMoniker": "cutscene\\cutscene.cpp",
+              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\cutscene\\cutscene.cpp",
+              "RelativeToolTip": "cutscene\\cutscene.cpp",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAwwIYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-03-19T11:59:29.239Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "cutscene.h",
+              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\cutscene\\cutscene.h",
+              "RelativeDocumentMoniker": "cutscene\\cutscene.h",
+              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\cutscene\\cutscene.h",
+              "RelativeToolTip": "cutscene\\cutscene.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-03-19T11:59:16.188Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "player.cpp",
+              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.cpp",
+              "RelativeDocumentMoniker": "player\\player.cpp",
+              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.cpp",
+              "RelativeToolTip": "player\\player.cpp",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAAAF4AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-03-17T02:21:59.201Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "player.h",
+              "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.h",
+              "RelativeDocumentMoniker": "player\\player.h",
+              "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\player\\player.h",
+              "RelativeToolTip": "player\\player.h",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAgwCIAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-03-17T02:21:42.477Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\melvi\\Downloads\\game project\\Raylib_Project\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAPcAAAAAAAAAAAAuwP8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-04T13:42:38.678Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T13:42:38.678Z"
             }
           ]
         }

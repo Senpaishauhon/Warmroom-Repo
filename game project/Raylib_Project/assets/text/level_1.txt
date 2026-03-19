@@ -1,0 +1,6 @@
+dialog 1
+
+dialog2
+dialog2
+
+dialog 3

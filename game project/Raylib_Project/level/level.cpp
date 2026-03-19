@@ -80,14 +80,25 @@ void LevelLoad(Level* level, EnemyManager* enemies, int levelID)
                     playerSpawnSet = true;
                 }
 
-                // ENEMY SPAWN
-                else if (c.r > 200 && c.g < 50 && c.b < 50)
+                // ENEMY SPAWNS (Red, Magenta, Yellow)
+                else if (c.r > 200 && c.g < 50 && c.b < 50) // RED = SLIME
                 {
-                    if (enemies->count < MAX_ENEMIES)
-                    {
-                        EnemyInit(&enemies->enemies[enemies->count],
-                            { worldX, worldY });
-
+                    if (enemies->count < MAX_ENEMIES) {
+                        EnemyInit(&enemies->enemies[enemies->count], { worldX, worldY }, ENEMY_SLIME);
+                        enemies->count++;
+                    }
+                }
+                else if (c.r > 200 && c.g < 50 && c.b > 200) // MAGENTA = BOSS 1
+                {
+                    if (enemies->count < MAX_ENEMIES) {
+                        EnemyInit(&enemies->enemies[enemies->count], { worldX, worldY }, ENEMY_BOSS1);
+                        enemies->count++;
+                    }
+                }
+                else if (c.r > 200 && c.g > 200 && c.b < 50) // YELLOW = BOSS 2
+                {
+                    if (enemies->count < MAX_ENEMIES) {
+                        EnemyInit(&enemies->enemies[enemies->count], { worldX, worldY }, ENEMY_BOSS2);
                         enemies->count++;
                     }
                 }
@@ -122,19 +133,23 @@ void LevelLoad(Level* level, EnemyManager* enemies, int levelID)
 
 bool LevelUpdate(Level* level, Player* player)
 {
-    Rectangle playerRect =
-    {
-        player->pos.x,
-        player->pos.y,
-        20,
-        20
-    };
+    Rectangle playerRect = { player->pos.x, player->pos.y, 50, 50 };
 
     for (int i = 0; i < level->barrierCount; i++)
     {
+        // Player hitting wall
         if (CheckCollisionRecs(playerRect, level->barriers[i].rect))
         {
             player->pos = player->prevPos;
+        }
+
+        // Arrow hitting wall
+        if (player->arrowActive)
+        {
+            if (CheckCollisionPointRec(player->arrowPos, level->barriers[i].rect))
+            {
+                player->arrowActive = false;
+            }
         }
     }
 
@@ -142,9 +157,7 @@ bool LevelUpdate(Level* level, Player* player)
     if (CheckCollisionRecs(playerRect, level->portal))
     {
         if (IsKeyPressed(KEY_E))
-        {
             return true;
-        }
     }
 
     return false;
@@ -154,12 +167,12 @@ void LevelDraw(Level* level)
 {
     DrawTexture(level->mapTexture, 0, 0, WHITE);
 
-    // debug walls
+    // debug walls (uncomment to see collision lines)
     for (int i = 0; i < level->barrierCount; i++)
     {
-        DrawRectangleLinesEx(level->barriers[i].rect, 1, RED);
+        // DrawRectangleLinesEx(level->barriers[i].rect, 1, RED);
     }
 
-    // debug portal
-    DrawRectangleLinesEx(level->portal, 2, BLUE);
+    // debug portal (uncomment to see portal bounds)
+    // DrawRectangleLinesEx(level->portal, 2, BLUE);
 }

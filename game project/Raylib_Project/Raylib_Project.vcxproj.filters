@@ -37,6 +37,9 @@
     <Filter Include="Source Files\assets\maps">
       <UniqueIdentifier>{194431f3-e50e-453b-8291-4fc2863b6df8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\cutscene">
+      <UniqueIdentifier>{cfa8c561-effe-40cf-a399-ef92987ff83b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -63,6 +66,9 @@
     <ClCompile Include="camera\camera.cpp">
       <Filter>Source Files\camera</Filter>
     </ClCompile>
+    <ClCompile Include="cutscene\cutscene.cpp">
+      <Filter>Source Files\cutscene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ui\menu.h">
@@ -85,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="camera\camera.h">
       <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="cutscene\cutscene.h">
+      <Filter>Source Files\cutscene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
