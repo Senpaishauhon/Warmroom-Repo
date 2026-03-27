@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -110,13 +110,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\melvi\Downloads\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\main\Downloads\downloaders\coding\library\raylib-5.5_win64_msvc16\include</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\melvi\Downloads\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\main\Downloads\downloaders\coding\library\raylib-5.5_win64_msvc16\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -128,17 +128,18 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\melvi\Downloads\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\main\Downloads\downloaders\coding\library\raylib-5.5_win64_msvc16\include</AdditionalIncludeDirectories>
       <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\melvi\Downloads\raylib-5.5_win64_msvc16\raylib-5.5_win64_msvc16\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\main\Downloads\downloaders\coding\library\raylib-5.5_win64_msvc16\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="audio\audio.cpp" />
     <ClCompile Include="camera\camera.cpp" />
     <ClCompile Include="core\save.cpp" />
     <ClCompile Include="cutscene\cutscene.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="ui\settings.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="audio\audio.h" />
     <ClInclude Include="camera\camera.h" />
     <ClInclude Include="core\save.h" />
     <ClInclude Include="cutscene\cutscene.h" />

@@ -2,25 +2,29 @@
 #include "save.h"
 #include <stdio.h>
 
-bool LoadCompletion()
-{
-    FILE* f = fopen("save.txt", "r");
-
-    if (!f) return false;
-
-    int v = 0;
-    fscanf(f, "%d", &v);
+void SaveGame(int level, int missed, float diff) {
+    FILE* f = fopen("save.dat", "wb");
+    if (!f) return;
+    SaveData data;
+    data.currentLevel = level;
+    data.missedEnemies = missed;
+    data.difficulty = diff;
+    data.exists = true;
+    fwrite(&data, sizeof(SaveData), 1, f);
     fclose(f);
-
-    return v == 1;
 }
 
-void SaveCompletion()
-{
-    FILE* f = fopen("save.txt", "w");
+SaveData LoadGame() {
+    SaveData data = { 1, 0, 1.0f, false };
+    FILE* f = fopen("save.dat", "rb");
+    if (f) {
+        fread(&data, sizeof(SaveData), 1, f);
+        data.exists = true;
+        fclose(f);
+    }
+    return data;
+}
 
-    if (!f) return;
-
-    fprintf(f, "1");
-    fclose(f);
+void DeleteSave() {
+    remove("save.dat");
 }

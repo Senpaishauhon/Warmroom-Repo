@@ -40,6 +40,9 @@
     <Filter Include="Source Files\cutscene">
       <UniqueIdentifier>{cfa8c561-effe-40cf-a399-ef92987ff83b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\audio">
+      <UniqueIdentifier>{5d4edd6e-07c2-45c3-ab02-61786be37c7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,6 +72,9 @@
     <ClCompile Include="cutscene\cutscene.cpp">
       <Filter>Source Files\cutscene</Filter>
     </ClCompile>
+    <ClCompile Include="audio\audio.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ui\menu.h">
@@ -94,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="cutscene\cutscene.h">
       <Filter>Source Files\cutscene</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\audio.h">
+      <Filter>Source Files\audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

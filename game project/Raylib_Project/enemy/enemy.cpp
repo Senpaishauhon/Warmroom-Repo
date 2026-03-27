@@ -1,30 +1,26 @@
 #include "enemy.h"
 #include <math.h>
 
-// --- Static Image cache for Pixel-Perfect Collision ---
-// Kept in CPU memory so we can read the transparent pixels!
+// Images stored in computer memory for pixel-perfect hit detection
 static Image slimeImg[2];
 static Image boss1Img[2];
 static Image boss2Img[2];
 
 void EnemyManagerInit(EnemyManager* manager)
 {
-    // Load CPU Images
+    // Loading all monster textures
     slimeImg[0] = LoadImage("assets/enemy/slime/slime_0.png");
-    manager->slimeFrames[0] = LoadTextureFromImage(slimeImg[0]); // Send to GPU
-
+    manager->slimeFrames[0] = LoadTextureFromImage(slimeImg[0]);
     slimeImg[1] = LoadImage("assets/enemy/slime/slime_1.png");
     manager->slimeFrames[1] = LoadTextureFromImage(slimeImg[1]);
 
     boss1Img[0] = LoadImage("assets/enemy/boss/boss1/boss_0.png");
     manager->boss1Frames[0] = LoadTextureFromImage(boss1Img[0]);
-
     boss1Img[1] = LoadImage("assets/enemy/boss/boss1/boss_1.png");
     manager->boss1Frames[1] = LoadTextureFromImage(boss1Img[1]);
 
     boss2Img[0] = LoadImage("assets/enemy/boss/boss2/boss_0.png");
     manager->boss2Frames[0] = LoadTextureFromImage(boss2Img[0]);
-
     boss2Img[1] = LoadImage("assets/enemy/boss/boss2/boss_1.png");
     manager->boss2Frames[1] = LoadTextureFromImage(boss2Img[1]);
 }
@@ -37,30 +33,30 @@ void EnemyInit(Enemy* enemy, Vector2 pos, EnemyType type)
     enemy->type = type;
     enemy->facingDir = 1;
     enemy->animTime = 0.0f;
-    enemy->flashTimer = 0.0f; // Reset flash timer
+    enemy->flashTimer = 0.0f;
 
     if (type == ENEMY_SLIME)
     {
-        enemy->hp = 1;
+        enemy->hp = 1;      // Standard slime health
         enemy->speed = 80.0f;
     }
-    else // Bosses
+    else
     {
-        enemy->hp = 10;
+        enemy->hp = 10;     // Standard boss health
         enemy->speed = 120.0f;
     }
 }
 
-// --- PIXEL-PERFECT COLLISION FUNCTION ---
+// Accurate check to see if an arrow tip touched the non-transparent part of the monster
 bool CheckArrowHitPixelPerfect(Enemy* enemy, Vector2 arrowPos)
 {
     float size = (enemy->type == ENEMY_SLIME) ? 50.0f : 200.0f;
     Rectangle screenBox = { enemy->pos.x, enemy->pos.y, size, size };
 
-    // 1. Check basic bounding box first (to save performance)
+    // Standard box check first (performance optimization)
     if (!CheckCollisionPointRec(arrowPos, screenBox)) return false;
 
-    // 2. Figure out which image is currently playing
+    // Pick correct animation frame
     int frame = (int)(enemy->animTime * 4.0f) % 2;
     Image* img = nullptr;
 
@@ -68,34 +64,28 @@ bool CheckArrowHitPixelPerfect(Enemy* enemy, Vector2 arrowPos)
     else if (enemy->type == ENEMY_BOSS1) img = &boss1Img[frame];
     else if (enemy->type == ENEMY_BOSS2) img = &boss2Img[frame];
 
-    // Safety fallback just in case image failed to load
     if (!img || img->data == nullptr) return true;
 
-    // 3. Map the arrow's screen position to the image's specific pixels
+    // Map screen position to pixel index
     float relX = arrowPos.x - screenBox.x;
     float relY = arrowPos.y - screenBox.y;
 
     int imgX = (int)((relX / size) * img->width);
     int imgY = (int)((relY / size) * img->height);
 
-    // Keep coordinates strictly inside image boundaries
-    if (imgX < 0) imgX = 0;
-    if (imgX >= img->width) imgX = img->width - 1;
-    if (imgY < 0) imgY = 0;
-    if (imgY >= img->height) imgY = img->height - 1;
-
-    // Apply exact flipping logic if the enemy is facing Left
     if (enemy->facingDir == -1) {
-        imgX = img->width - 1 - imgX;
+        imgX = img->width - 1 - imgX; // Handle flipped sprite
     }
 
-    // 4. Get the color of the pixel the arrow is touching
-    Color pixel = GetImageColor(*img, imgX, imgY);
+    // Get color at coordinates and check Alpha (Transparency)
+    Color pixel = GetImageColor(*img,
+        (imgX < 0) ? 0 : (imgX >= img->width) ? img->width - 1 : imgX,
+        (imgY < 0) ? 0 : (imgY >= img->height) ? img->height - 1 : imgY);
 
-    // 5. If alpha is > 50, it hit the drawn sprite. If < 50, it hit transparent empty space!
-    return pixel.a > 50;
+    return pixel.a > 50; // Hit if alpha is more than 50
 }
 
+// Logic for monster AI and health
 bool EnemyUpdate(Enemy* enemy, Player* player, float difficulty)
 {
     if (!enemy->alive) return false;
@@ -103,15 +93,11 @@ bool EnemyUpdate(Enemy* enemy, Player* player, float difficulty)
     float dt = GetFrameTime();
     enemy->animTime += dt;
 
-    // --- REDUCE FLASH TIMER ---
     if (enemy->flashTimer > 0.0f) {
-        enemy->flashTimer -= dt;
+        enemy->flashTimer -= dt; // Countdown red damage flash
     }
 
-    // --- SETUP HITBOXES & CENTERS ---
     float size = (enemy->type == ENEMY_SLIME) ? 50.0f : 200.0f;
-
-    // Tighter hit radius to avoid unfair physical collisions with boss's empty corners
     float hitboxRadius = (enemy->type == ENEMY_SLIME) ? 15.0f : 60.0f;
 
     Vector2 enemyCenter = { enemy->pos.x + (size / 2.0f), enemy->pos.y + (size / 2.0f) };
@@ -121,17 +107,19 @@ bool EnemyUpdate(Enemy* enemy, Player* player, float difficulty)
     float dy = playerCenter.y - enemyCenter.y;
     float distToPlayer = sqrtf(dx * dx + dy * dy);
 
-    // --- AI MOVEMENT LOGIC ---
+    // AI MOVEMENT (Multiplied by difficulty: Hard Mode = 2.0x faster)
     if (enemy->type == ENEMY_SLIME)
     {
-        if (distToPlayer < 250.0f) // Detect player
+        if (distToPlayer < 250.0f)
         {
+            // Chase logic
             enemy->pos.x += (dx / distToPlayer) * enemy->speed * difficulty * dt;
             enemy->pos.y += (dy / distToPlayer) * enemy->speed * difficulty * dt;
             enemy->facingDir = (dx > 0) ? 1 : -1;
         }
-        else // Patrol
+        else
         {
+            // Bouncing patrol logic
             enemy->pos.y += enemy->speed * difficulty * dt;
 
             if (enemy->pos.y > enemy->startY + 20.0f) {
@@ -144,8 +132,9 @@ bool EnemyUpdate(Enemy* enemy, Player* player, float difficulty)
             }
         }
     }
-    else // BOSS AI
+    else
     {
+        // Boss Chase Logic
         if (distToPlayer < 500.0f)
         {
             enemy->pos.x += (dx / distToPlayer) * enemy->speed * difficulty * dt;
@@ -154,58 +143,48 @@ bool EnemyUpdate(Enemy* enemy, Player* player, float difficulty)
         }
     }
 
-    // --- ARROW COLLISION (PIXEL-PERFECT) ---
+    // Check for arrow hits
     if (player->arrowActive && CheckArrowHitPixelPerfect(enemy, player->arrowPos))
     {
-        player->arrowActive = false; // Despawn arrow 
-        enemy->hp -= 1;              // Deal damage
-        enemy->flashTimer = 0.15f;   // Flash RED for 0.15 seconds
+        player->arrowActive = false;
+        enemy->hp -= 1;
+        enemy->flashTimer = 0.15f;
 
         if (enemy->hp <= 0) {
-            enemy->alive = false;
+            enemy->alive = false; // Monster death
         }
     }
 
-    // --- PLAYER TOUCHES ENEMY ---
+    // Check for collision with player (Circle vs Circle)
     if (CheckCollisionCircles(enemyCenter, hitboxRadius, playerCenter, 15.0f))
     {
-        return true; // Game Over
+        return true;
     }
 
     return false;
 }
 
+// Drawing the monster onto the virtual screen
 void EnemyDraw(EnemyManager* manager, Enemy* enemy)
 {
     if (!enemy->alive) return;
 
-    Texture2D tex;
-    float size = 50.0f;
-
-    // 4 frames per second (flips back and forth every 0.25 seconds)
+    Texture2D tex = { 0 };
+    float size = (enemy->type == ENEMY_SLIME) ? 50.0f : 200.0f;
     int frame = (int)(enemy->animTime * 4.0f) % 2;
 
-    if (enemy->type == ENEMY_SLIME) {
-        tex = manager->slimeFrames[frame];
-    }
-    else if (enemy->type == ENEMY_BOSS1) {
-        tex = manager->boss1Frames[frame];
-        size = 200.0f;
-    }
-    else if (enemy->type == ENEMY_BOSS2) {
-        tex = manager->boss2Frames[frame];
-        size = 200.0f;
-    }
+    if (enemy->type == ENEMY_SLIME) tex = manager->slimeFrames[frame];
+    else if (enemy->type == ENEMY_BOSS1) tex = manager->boss1Frames[frame];
+    else if (enemy->type == ENEMY_BOSS2) tex = manager->boss2Frames[frame];
+
+    if (tex.id == 0) return;
 
     Vector2 center = { enemy->pos.x + (size / 2.0f), enemy->pos.y + (size / 2.0f) };
     Rectangle dest = { center.x, center.y, size, size };
     Vector2 origin = { size / 2.0f, size / 2.0f };
-
-    // Multiplying width by facingDir auto-flips it based on quadrant
     Rectangle source = { 0.0f, 0.0f, (float)tex.width * enemy->facingDir, (float)tex.height };
 
-    // Set drawing tint to RED if currently flashing
+    // Tint RED if flashing from damage
     Color tint = (enemy->flashTimer > 0.0f) ? RED : WHITE;
-
     DrawTexturePro(tex, source, dest, origin, 0.0f, tint);
 }

@@ -1,5 +1,5 @@
-dialog 1
+Guide: The Outpost Ruins were once our frontline defense. Now it’s a den of chaos.
 
-dialog 2
+Guide: Stay alert—Stellarbane corrupts all it touches, and the Feral Beasts hunt in packs.
 
-dialog 3
+Guide: Bring back the first shard. For Warmroom.

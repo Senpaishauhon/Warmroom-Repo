@@ -1,6 +1,9 @@
-dialog 1
+On planet Aether, the Warmroom Civilization has flourished for a millennium, sustained by the power of the Stellar Core.
 
-dialog2
-dialog2
+The Randy Civilization, hailing from the depths of space, descended to plunder this energy—shattering the Stellar Core into fragments.
 
-dialog 3
+These scattered Stellar Shards gave birth to Feral Beasts, pushing the Warmroom Civilization to the edge of extinction.
+
+Their chieftain rallied the entire clan and selected 20 elite warriors known as Hunters, tasked with reclaiming the Stellar Shards.
+
+Nineteen comrades fell in battle. You are the last Hunter. Fulfill the mission, avenge your fallen brothers and sisters, and save your civilization!
