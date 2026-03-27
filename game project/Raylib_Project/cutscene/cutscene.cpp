@@ -3,18 +3,20 @@
 #include <stdio.h>
 #include <string.h>
 
-// This function reads the text file and breaks it into blocks for typing
+// This function reads a .txt file and breaks it up into different dialogue boxes
 void LoadCutscene(Cutscene* cs, const char* filename)
 {
-    cs->dialogCount = 0;
-    cs->currentDialog = 0;
-    cs->typeTimer = 0.0f;
-    cs->charCount = 0;
+    cs->dialogCount = 0;   // How many boxes of text we found
+    cs->currentDialog = 0; // Which box we are currently looking at
+    cs->typeTimer = 0.0f;  // Timer for the typewriter effect
+    cs->charCount = 0;     // Number of letters visible on screen
 
+    // Clear any old text data from memory
     for (int i = 0; i < MAX_DIALOGS; i++) {
         cs->dialogs[i][0] = '\0';
     }
 
+    // Open the text file for reading
     FILE* f = fopen(filename, "r");
     if (!f) {
         strcpy(cs->dialogs[0], "Error: Could not load text file.");
@@ -25,16 +27,20 @@ void LoadCutscene(Cutscene* cs, const char* filename)
     char buffer[1024];
     int currentIdx = 0;
 
+    // Read the file line by line
     while (fgets(buffer, sizeof(buffer), f))
     {
+        // Strip out invisible newline characters at the end of the line
         size_t len = strlen(buffer);
         while (len > 0 && (buffer[len - 1] == '\n' || buffer[len - 1] == '\r')) {
             buffer[len - 1] = '\0';
             len--;
         }
 
+        // Ignore curly braces (notes in the script)
         if (buffer[0] == '{' || buffer[0] == '}') continue;
 
+        // If the line is empty, it signals the end of a dialogue box
         if (len == 0) {
             if (strlen(cs->dialogs[currentIdx]) > 0) {
                 currentIdx++;
@@ -42,6 +48,7 @@ void LoadCutscene(Cutscene* cs, const char* filename)
             }
         }
         else {
+            // Add the text to the current dialogue box, adding a line break if needed
             int currentLen = (int)strlen(cs->dialogs[currentIdx]);
             int addedLen = (int)strlen(buffer);
 
@@ -52,6 +59,7 @@ void LoadCutscene(Cutscene* cs, const char* filename)
                 strcat(cs->dialogs[currentIdx], buffer);
             }
             else {
+                // If the box is full, move to a new one
                 currentIdx++;
                 if (currentIdx < MAX_DIALOGS) {
                     strcpy(cs->dialogs[currentIdx], buffer);
@@ -62,40 +70,42 @@ void LoadCutscene(Cutscene* cs, const char* filename)
             }
         }
     }
-    fclose(f);
+    fclose(f); // Close the file
 
+    // Update total count
     if (currentIdx < MAX_DIALOGS && strlen(cs->dialogs[currentIdx]) > 0) {
         currentIdx++;
     }
     cs->dialogCount = currentIdx;
 }
 
-// Logic for Advance dialogue box
+// Logic for advancing text when player hits ENTER
 bool UpdateCutscene(Cutscene* cs)
 {
     if (cs->dialogCount == 0) return true;
 
-    // Typewriter effect timer
+    // Typewriter effect timer: increase letters shown over time
     cs->typeTimer += GetFrameTime();
-    cs->charCount = (int)(cs->typeTimer * 40.0f); // Speed of 40 chars per second
+    cs->charCount = (int)(cs->typeTimer * 40.0f); // 40 letters per second
 
     int maxChars = (int)strlen(cs->dialogs[cs->currentDialog]);
 
     if (IsKeyPressed(KEY_ENTER))
     {
+        // If text is still typing, show all of it immediately
         if (cs->charCount < maxChars) {
-            // Skip typing and show full text if ENTER is pressed early
             cs->charCount = maxChars;
             cs->typeTimer = maxChars / 40.0f + 1.0f;
         }
         else {
-            // Move to the next dialogue box
+            // If already finished typing, move to the next dialogue box
             cs->currentDialog++;
             cs->typeTimer = 0.0f;
             cs->charCount = 0;
 
+            // If we ran out of boxes, end the cutscene
             if (cs->currentDialog >= cs->dialogCount) {
-                return true; // All dialogue finished
+                return true;
             }
         }
     }
@@ -103,26 +113,27 @@ bool UpdateCutscene(Cutscene* cs)
     return false;
 }
 
-// Painting the text to the screen
+// Rendering the text boxes onto the screen
 void DrawCutscene(Cutscene* cs)
 {
     if (cs->dialogCount == 0) return;
 
+    // Loop through all previous boxes to draw them as scrolled-up history
     for (int i = 0; i <= cs->currentDialog; i++)
     {
-        // Math to scroll the text boxes upwards as new ones appear
+        // Math to calculate Y position: the current box is at 500, older ones are higher up
         int yPos = 500 - ((cs->currentDialog - i) * 80);
 
-        if (yPos < -50) continue;
+        if (yPos < -50) continue; // Offscreen top, don't draw
 
         // --- SPEAKER COLORING LOGIC ---
         Color textColor = WHITE;
-        // Check the start of the text to identify the speaker
+        // Detect "Guide:" or "Hunter:" tags to apply color
         if (strncmp(cs->dialogs[i], "Guide:", 6) == 0) textColor = SKYBLUE;
         else if (strncmp(cs->dialogs[i], "Hunter:", 7) == 0) textColor = YELLOW;
 
         if (i == cs->currentDialog) {
-            // Typewriter display: Copy only 'charCount' letters to a temporary buffer
+            // Typewriter display: copy only visible characters to a temporary buffer
             char temp[MAX_CHAR];
             int charsToCopy = cs->charCount;
             int maxChars = (int)strlen(cs->dialogs[i]);
@@ -135,12 +146,12 @@ void DrawCutscene(Cutscene* cs)
             DrawText(temp, 80, yPos, 20, textColor);
         }
         else {
-            // Already read lines turn Dark Gray
+            // Lines from history are drawn darker
             DrawText(cs->dialogs[i], 80, yPos, 20, DARKGRAY);
         }
     }
 
-    // Show blinking prompt if typing is finished
+    // Draw a blinking prompt when text is fully typed
     int maxChars = (int)strlen(cs->dialogs[cs->currentDialog]);
     if (cs->charCount >= maxChars) {
         if ((int)(GetTime() * 2) % 2 == 0) {

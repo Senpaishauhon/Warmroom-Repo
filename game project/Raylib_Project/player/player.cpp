@@ -2,218 +2,101 @@
 #include <math.h>
 #include <stdio.h>
 
-void PlayerInit(Player* player)
-{
+// INITIALIZE: Load textures and set starting speeds
+void PlayerInit(Player* player) {
     player->pos = { 256.0f, 256.0f };
     player->speed = 200.0f;
 
-    // --- LOAD WEAPONS ---
+    // Load weapon images
     player->arrowTex = LoadTexture("assets/weapons/arrow.png");
     player->bowTex = LoadTexture("assets/weapons/bow.png");
     player->arrowActive = false;
 
-    // --- LOAD ANIMATIONS ---
-    // Make sure these are .png files, not .pdf!
+    // Load Animation layers (Body and Legs separately)
     player->idleFrames[0] = LoadTexture("assets/idle/player_idle_0.png");
     player->idleFrames[1] = LoadTexture("assets/idle/player_idle_1.png");
-
     player->runBodyFrames[0] = LoadTexture("assets/run/player_run_0.png");
     player->runBodyFrames[1] = LoadTexture("assets/run/player_run_1.png");
 
-    // Load the 9 leg frames dynamically
-    for (int i = 0; i < 9; i++)
-    {
-        char path[64];
-        snprintf(path, sizeof(path), "assets/run/leg_run_%d.png", i);
+    for (int i = 0; i < 9; i++) {
+        char path[64]; snprintf(path, 64, "assets/run/leg_run_%d.png", i);
         player->runLegFrames[i] = LoadTexture(path);
     }
 
     player->animTime = 0.0f;
-    player->facingDir = 1;
-    player->isMoving = false;
-    player->wasMoving = false;
+    player->facingDir = 1; // 1 = Right, -1 = Left
 }
 
-void PlayerUpdate(Player* player, Camera2D camera)
-{
-    player->prevPos = player->pos;
-
+// UPDATE: Move the player based on keys and rotate the bow toward the mouse
+void PlayerUpdate(Player* player, Camera2D camera) {
+    player->prevPos = player->pos; // Remember where we were in case we hit a wall
     float dt = GetFrameTime();
 
-    // MOVEMENT
+    // Key input: W, A, S, D
     if (IsKeyDown(KEY_W)) player->pos.y -= player->speed * dt;
     if (IsKeyDown(KEY_S)) player->pos.y += player->speed * dt;
-    if (IsKeyDown(KEY_A))
-    {
-        player->pos.x -= player->speed * dt;
-        player->facingDir = -1; // Flip Left
-    }
-    if (IsKeyDown(KEY_D))
-    {
-        player->pos.x += player->speed * dt;
-        player->facingDir = 1;  // Flip Right
-    }
+    if (IsKeyDown(KEY_A)) { player->pos.x -= player->speed * dt; player->facingDir = -1; }
+    if (IsKeyDown(KEY_D)) { player->pos.x += player->speed * dt; player->facingDir = 1; }
 
-    // MAP BOUNDARIES
-    float mapWidth = 2048;
-    float mapHeight = 2048;
-
-    if (player->pos.x < 0) player->pos.x = 0;
-    if (player->pos.y < 0) player->pos.y = 0;
-    if (player->pos.x > mapWidth - 50) player->pos.x = mapWidth - 50;
-    if (player->pos.y > mapHeight - 50) player->pos.y = mapHeight - 50;
-
-    // ANIMATION LOGIC
+    // Logic to check if we are moving or standing still for animations
     player->isMoving = (player->pos.x != player->prevPos.x || player->pos.y != player->prevPos.y);
-
-    // Reset animation timer cleanly when starting or stopping movement
-    if (player->isMoving != player->wasMoving)
-    {
-        player->animTime = 0.0f;
-    }
-    player->wasMoving = player->isMoving;
-
-    // 1-second animation loop
     player->animTime += dt;
-    if (player->animTime >= 1.0f)
-    {
-        player->animTime -= 1.0f;
-    }
+    if (player->animTime >= 1.0f) player->animTime -= 1.0f;
 
-    // --- AIMING & BOW ROTATION ---
+    // BOW ROTATION: Point the bow toward the mouse in the game world
     Vector2 mouse = GetMousePosition();
-
-    // NEW: Screen calculation for 800x600!
-    float scaleX = (float)GetScreenWidth() / 800.0f;
-    float scaleY = (float)GetScreenHeight() / 600.0f;
-    float scale = (scaleX < scaleY) ? scaleX : scaleY;
-
-    float offsetX = (GetScreenWidth() - 800.0f * scale) / 2.0f;
-    float offsetY = (GetScreenHeight() - 600.0f * scale) / 2.0f;
-
-    mouse.x = (mouse.x - offsetX) / scale;
-    mouse.y = (mouse.y - offsetY) / scale;
+    // Screen math to find where mouse is on our scaled virtual screen
+    float s = (GetScreenWidth() / 800.0f < GetScreenHeight() / 600.0f) ? GetScreenWidth() / 800.0f : GetScreenHeight() / 600.0f;
+    mouse.x = (mouse.x - (GetScreenWidth() - 800 * s) / 2) / s;
+    mouse.y = (mouse.y - (GetScreenHeight() - 600 * s) / 2) / s;
 
     Vector2 worldMouse = GetScreenToWorld2D(mouse, camera);
-    Vector2 playerCenter = { player->pos.x + 25.0f, player->pos.y + 25.0f };
+    float dx = worldMouse.x - (player->pos.x + 25), dy = worldMouse.y - (player->pos.y + 25);
+    player->bowAngle = atan2f(dy, dx) * RAD2DEG; // Angle in degrees
 
-    float dx = worldMouse.x - playerCenter.x;
-    float dy = worldMouse.y - playerCenter.y;
-
-    player->bowAngle = atan2f(dy, dx) * RAD2DEG;
-
-    // SHOOTING (Only if arrow is NOT active)
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !player->arrowActive)
-    {
+    // SHOOT: Spawn an arrow at the bow's position
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !player->arrowActive) {
         float len = sqrtf(dx * dx + dy * dy);
-        if (len != 0)
-        {
-            player->arrowDir.x = dx / len;
-            player->arrowDir.y = dy / len;
-        }
-
-        // Spawn the arrow tip at the bow's current radius (35 pixels away)
-        player->arrowPos.x = playerCenter.x + player->arrowDir.x * 35.0f;
-        player->arrowPos.y = playerCenter.y + player->arrowDir.y * 35.0f;
-
+        player->arrowDir = { dx / len, dy / len };
+        player->arrowPos = { (player->pos.x + 25) + player->arrowDir.x * 35, (player->pos.y + 25) + player->arrowDir.y * 35 };
         player->arrowAngle = player->bowAngle;
         player->arrowActive = true;
     }
 
-    // ARROW PHYSICS
-    if (player->arrowActive)
-    {
-        player->arrowPos.x += player->arrowDir.x * 600.0f * dt;
-        player->arrowPos.y += player->arrowDir.y * 600.0f * dt;
-
-        if (player->arrowPos.x < 0 || player->arrowPos.y < 0 ||
-            player->arrowPos.x > mapWidth || player->arrowPos.y > mapHeight)
-        {
-            player->arrowActive = false;
-        }
+    // ARROW FLIGHT: Move the arrow through the air
+    if (player->arrowActive) {
+        player->arrowPos.x += player->arrowDir.x * 600 * dt;
+        player->arrowPos.y += player->arrowDir.y * 600 * dt;
+        // Kill arrow if it goes too far
+        if (player->arrowPos.x < 0 || player->arrowPos.x > 2048) player->arrowActive = false;
     }
 }
 
-void PlayerDraw(Player* player)
-{
-    // The player's logical center (based on the 50x50 physics hitbox)
-    Vector2 playerCenter = { player->pos.x + 25.0f, player->pos.y + 25.0f };
+// DRAW: Paint the legs, then the body, then the bow on the screen
+void PlayerDraw(Player* player) {
+    Rectangle dest = { player->pos.x + 25, player->pos.y + 25, 50, 50 };
+    Vector2 origin = { 25, 25 };
 
-    // SCALE CHANGE: Set the destination width and height to 50.0f
-    Rectangle dest = { playerCenter.x, playerCenter.y, 50.0f, 50.0f };
-    // Origin is now exactly half of 50 (25.0f) so it stays perfectly centered
-    Vector2 origin = { 25.0f, 25.0f };
-
-    // 1. DRAW PLAYER
-    if (player->isMoving)
-    {
-        // Math to calculate frames across a 1.0 second loop
-        int legFrame = (int)(player->animTime * 18.0f) % 9;  // 9 leg frames
-        int bodyFrame = (int)(player->animTime * 2.0f) % 2; // 2 body frames
-
-        Texture2D legTex = player->runLegFrames[legFrame];
-        Texture2D bodyTex = player->runBodyFrames[bodyFrame];
-
-        // Multiplying width by facingDir handles flipping on the X axis automatically
-        Rectangle legSource = { 0.0f, 0.0f, (float)legTex.width * player->facingDir, (float)legTex.height };
-        Rectangle bodySource = { 0.0f, 0.0f, (float)bodyTex.width * player->facingDir, (float)bodyTex.height };
-
-        // Draw Legs FIRST so they are under the body
-        DrawTexturePro(legTex, legSource, dest, origin, 0.0f, WHITE);
-        // Draw Body SECOND so it is on top
-        DrawTexturePro(bodyTex, bodySource, dest, origin, 0.0f, WHITE);
+    if (player->isMoving) {
+        // Draw Legs (layer 1)
+        int legF = (int)(player->animTime * 18.0f) % 9;
+        DrawTexturePro(player->runLegFrames[legF], { 0,0,(float)player->runLegFrames[legF].width * player->facingDir, (float)player->runLegFrames[legF].height }, dest, origin, 0, WHITE);
+        // Draw Body (layer 2)
+        int bodyF = (int)(player->animTime * 2.0f) % 2;
+        DrawTexturePro(player->runBodyFrames[bodyF], { 0,0,(float)player->runBodyFrames[bodyF].width * player->facingDir, (float)player->runBodyFrames[bodyF].height }, dest, origin, 0, WHITE);
     }
-    else
-    {
-        // 2 idle frames across the same 1.0 second loop (0.5 seconds per frame)
-        int idleFrame = (int)(player->animTime * 2.0f) % 2;
-        Texture2D idleTex = player->idleFrames[idleFrame];
-
-        Rectangle idleSource = { 0.0f, 0.0f, (float)idleTex.width * player->facingDir, (float)idleTex.height };
-        DrawTexturePro(idleTex, idleSource, dest, origin, 0.0f, WHITE);
+    else {
+        // Draw Idle animation
+        int idleF = (int)(player->animTime * 2.0f) % 2;
+        DrawTexturePro(player->idleFrames[idleF], { 0,0,(float)player->idleFrames[idleF].width * player->facingDir, (float)player->idleFrames[idleF].height }, dest, origin, 0, WHITE);
     }
 
-    // --------------------------------------------------------
-    // 2. DRAW BOW (Orbiting the player)
-    // --------------------------------------------------------
-    if (player->bowTex.height > 0 && player->arrowTex.width > 0)
-    {
-        float targetBowHeight = 35.0f;
-        float bowScale = targetBowHeight / (float)player->bowTex.height;
+    // Draw the orbiting Bow
+    Vector2 bowPos = { (player->pos.x + 25) + cosf(player->bowAngle * DEG2RAD) * 15, (player->pos.y + 25) + sinf(player->bowAngle * DEG2RAD) * 15 };
+    DrawTexturePro(player->bowTex, { 0,0,(float)player->bowTex.width, (float)player->bowTex.height }, { bowPos.x, bowPos.y, 35, 35 }, { 17, 17 }, player->bowAngle, WHITE);
 
-        float bowW = player->bowTex.width * bowScale;
-        float bowH = player->bowTex.height * bowScale;
-
-        float orbitRadius = 15.0f;
-        float bowRad = player->bowAngle * DEG2RAD;
-        Vector2 bowPos = {
-            playerCenter.x + cosf(bowRad) * orbitRadius,
-            playerCenter.y + sinf(bowRad) * orbitRadius
-        };
-
-        Rectangle bowSource = { 0.0f, 0.0f, (float)player->bowTex.width, (float)player->bowTex.height };
-        Rectangle bowDest = { bowPos.x, bowPos.y, bowW, bowH };
-        Vector2 bowOrigin = { bowW / 2.0f, bowH / 2.0f };
-
-        DrawTexturePro(player->bowTex, bowSource, bowDest, bowOrigin, player->bowAngle, WHITE);
-
-        // --------------------------------------------------------
-        // 3. DRAW ARROW
-        // --------------------------------------------------------
-        if (player->arrowActive)
-        {
-            float targetArrowLength = 30.0f;
-            float arrowScale = targetArrowLength / (float)player->arrowTex.width;
-
-            float arrowW = player->arrowTex.width * arrowScale;
-            float arrowH = player->arrowTex.height * arrowScale;
-
-            Rectangle arrowSource = { 0.0f, 0.0f, (float)player->arrowTex.width, (float)player->arrowTex.height };
-            Rectangle arrowDest = { player->arrowPos.x, player->arrowPos.y, arrowW, arrowH };
-
-            Vector2 arrowOrigin = { arrowW, arrowH / 2.0f };
-
-            DrawTexturePro(player->arrowTex, arrowSource, arrowDest, arrowOrigin, player->arrowAngle, WHITE);
-        }
+    // Draw the Arrow if it's flying
+    if (player->arrowActive) {
+        DrawTexturePro(player->arrowTex, { 0,0,(float)player->arrowTex.width, (float)player->arrowTex.height }, { player->arrowPos.x, player->arrowPos.y, 30, 10 }, { 30, 5 }, player->arrowAngle, WHITE);
     }
 }

@@ -1,30 +1,22 @@
 #include "camera.h"
 
-Camera2D CreateCamera()
-{
+// INITIALIZE: Center the camera on our 800x600 screen
+Camera2D CreateCamera() {
     Camera2D camera = { 0 };
-    camera.target = Vector2{ 0.0f, 0.0f };
-
-    // NEW: Centered for 800x600 screen
-    camera.offset = Vector2{ 400.0f, 300.0f };
-
-    camera.rotation = 0.0f;
-    camera.zoom = 1.0f;
-
+    camera.target = { 0, 0 };      // The point the camera is looking at
+    camera.offset = { 400, 300 };  // Put that target point in the middle of 800x600
+    camera.rotation = 0.0f;        // No tilting
+    camera.zoom = 1.0f;            // No zooming in or out
     return camera;
 }
 
-void UpdateCameraPlayer(Camera2D* camera, Vector2 playerPos, int mapWidth, int mapHeight)
-{
-    camera->target = playerPos;
+// UPDATE: Make the camera follow the player, but stop at the map edges
+void UpdateCameraPlayer(Camera2D* camera, Vector2 playerPos, int mapWidth, int mapHeight) {
+    camera->target = playerPos; // Look at the player
 
-    // NEW: Clamping boundaries for 800x600 screen
-    float halfW = 400.0f;
-    float halfH = 300.0f;
-
-    if (camera->target.x < halfW) camera->target.x = halfW;
-    if (camera->target.y < halfH) camera->target.y = halfH;
-
-    if (camera->target.x > mapWidth - halfW) camera->target.x = mapWidth - halfW;
-    if (camera->target.y > mapHeight - halfH) camera->target.y = mapHeight - halfH;
+    // Clamping: If the camera gets too close to the edge, force it to stay inside
+    if (camera->target.x < 400) camera->target.x = 400;
+    if (camera->target.y < 300) camera->target.y = 300;
+    if (camera->target.x > mapWidth - 400) camera->target.x = mapWidth - 400;
+    if (camera->target.y > mapHeight - 300) camera->target.y = mapHeight - 300;
 }

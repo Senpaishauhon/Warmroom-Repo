@@ -1,3 +1,3 @@
-﻿  cutscene.cpp
+﻿  main.cpp
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Raylib_Project.vcxproj -> C:\Users\main\Downloads\game project\Raylib_Project\x64\Debug\Raylib_Project.exe
