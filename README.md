@@ -1,127 +1,86 @@
-# Dungeon Game (Raylib)
+This is a comprehensive `README.md` file tailored for your project. It explains the story, the features you've implemented (like the Save and Difficulty systems), and how the code is structured so that others (or future you) can understand the project quickly.
 
-A simple dungeon shooter built in **C/C++ using Raylib**.
-The game features multiple levels, enemy AI, logic-map based level design, and a camera-follow system.
+***
 
----
+# Warmroom: The Last Hunter
 
-## Features
+**Warmroom** is a 2D top-down dungeon crawler built in **C++** using the **Raylib** library. You play as the last surviving Hunter of the Warmroom Civilization, tasked with reclaiming the Stellar Shards from the invading Randy Civilization to reignite the Stellar Core and save planet Aether.
 
-* Multiple dungeon levels
-* Logic-map based level generation
-* Enemy spawning and management
-* Player movement and shooting
-* Camera follow system
-* Portal system for level progression
-* Menu, pause, and difficulty selection
-* Ending screen after clearing all levels
+## 📖 The Story
+On planet Aether, the Warmroom Civilization flourished for a millennium, sustained by the power of the **Stellar Core**. The Randy Civilization descended from deep space to plunder this energy, shattering the Core into fragments. These shards gave birth to Feral Beasts, pushing Warmroom to the edge of extinction. 
+
+Out of 20 elite Hunters, 19 have fallen. **You are the last.**
 
 ---
 
-## Controls
-
-| Key        | Action         |
-| ---------- | -------------- |
-| W A S D    | Move           |
-| Mouse      | Aim            |
-| Left Click | Shoot          |
-| E          | Use portal     |
-| ESC        | Pause / Resume |
-
----
-
-## How Levels Work
-
-Each level uses **two images**:
-
-* `levelX.png` → the visible map
-* `levelX_logic.png` → the logic map used by the game
-
-The logic map determines gameplay elements using colors.
-
-### Logic Map Colors
-
-| Color | Meaning        |
-| ----- | -------------- |
-| Black | Wall / Barrier |
-| Green | Player spawn   |
-| Red   | Enemy spawn    |
-| Blue  | Portal         |
-
-Example:
-
-Black pixels become collision barriers.
-Red pixels spawn enemies.
-A blue pixel creates the portal to the next level.
+## 🎮 Gameplay Features
+*   **Dynamic Combat:** Use a bow and arrow with orbit-based aiming.
+*   **Pixel-Perfect Collision:** Arrows only register hits on the actual visible pixels of an enemy sprite, not just their "box."
+*   **Difficulty System:** 
+    *   **Normal:** Standard enemy speed and health.
+    *   **Hard:** Enemies move **2x faster** and have **2x more health**.
+*   **Save & Continue:** The game automatically saves your progress whenever you enter a new level, including your difficulty setting and "Missed Enemy" count.
+*   **Branching Endings:** 
+    *   **Good Ending:** Reclaim the shards and defeat Randy while clearing all feral beasts.
+    *   **Bad Ending:** Defeat Randy but leave monsters roaming the ruins.
+*   **Cinematic Cutscenes:** A custom typewriter-style dialogue system with color-coded text (Sky Blue for the Guide, Yellow for the Hunter).
 
 ---
 
-## Project Structure
+## ⌨️ Controls
+| Action | Key / Input |
+| :--- | :--- |
+| **Movement** | `W` `A` `S` `D` |
+| **Aim** | Mouse Movement |
+| **Shoot Arrow** | `Left Click` |
+| **Interact (Portal)** | `E` |
+| **Advance Dialogue** | `ENTER` |
+| **Pause Game** | `ESC` |
 
-```
-DungeonGame
-│
-├── assets
-│   └── maps
-│       ├── level1.png
-│       ├── level1_logic.png
-│       └── ...
-│
-├── player
-├── enemy
-├── level
-├── camera
-│
-├── main.cpp
-└── README.md
+---
+
+## 🛠️ Technical Details
+### Smart Screen Scaling
+The game is rendered at a base resolution of **800x600** into a `RenderTexture2D`. It then uses mathematical letterboxing to scale that image to fit any window size (resizable) while maintaining the original aspect ratio and "pixel-art" sharpness.
+
+### Save System
+Data is stored in `save.dat` using a binary `SaveData` struct:
+```cpp
+typedef struct {
+    int currentLevel;
+    int missedEnemies;
+    float difficulty;
+    bool exists;
+} SaveData;
 ```
 
----
-
-## Running the Game
-
-Download the release folder and run:
-
-```
-DungeonGame.exe
-```
-
-Make sure the `assets` folder stays in the same directory as the executable.
-
-No compiler is required to run the game.
+### Level Loading
+Maps are loaded using two images per level:
+1.  **Visual Map:** The actual artwork the player sees.
+2.  **Logic Map:** A color-coded pixel map where specific colors represent Walls (Black), Player Spawns (Green), Slimes (Red), and Portals (Blue).
 
 ---
 
-## Building From Source
-
-Requirements:
-
-* C++ compiler
-* Raylib installed
-* Visual Studio or another C++ IDE
-
-Steps:
-
-1. Clone the repository
-2. Open the project in your IDE
-3. Build the project in **Release** mode
-4. Run the generated `.exe`
+## 📁 File Structure
+*   `main.cpp`: The central game loop and state management.
+*   `player/`: Handles movement, bow rotation, and multi-layered animations (Legs/Body).
+*   `enemy/`: Contains the AI (Patrol vs Chase) and pixel-perfect hit detection.
+*   `level/`: Logic for loading maps and merging horizontal collision barriers.
+*   `cutscene/`: The "Typewriter" engine for story moments.
+*   `core/save.cpp`: The logic for reading and writing progress to the disk.
+*   `assets/`: Contains all `.png` textures, `.mp3` music, and `.txt` story files.
 
 ---
 
-## Future Improvements
-
-Planned features include:
-
-* Boss enemies
-* More enemy types
-* Portal animations
-* Sound effects and music
-* Improved level design tools
-* Better UI
+## 🚀 How to Build
+1.  Install **Visual Studio 2022**.
+2.  Install the **Raylib** library.
+3.  Open the `.sln` file.
+4.  Ensure the Working Directory is set to the project folder (so the game can find the `assets/` folder).
+5.  Press **F5** to compile and play.
 
 ---
 
-## Author
+*“For Warmroom. For the fallen. Reclaim the light.”*
 
 Created as a learning project using **C++ and Raylib**.
