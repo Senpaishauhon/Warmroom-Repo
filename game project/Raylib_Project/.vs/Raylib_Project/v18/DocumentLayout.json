@@ -49,6 +49,10 @@
           "SelectedChildIndex": 9,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "player.cpp",
@@ -58,8 +62,7 @@
               "RelativeToolTip": "player\\player.cpp",
               "ViewState": "AgIAAEcAAAAAAAAAAAAiwGUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-27T14:09:47.112Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T14:09:47.112Z"
             },
             {
               "$type": "Document",
@@ -71,8 +74,7 @@
               "RelativeToolTip": "core\\save.cpp",
               "ViewState": "AgIAAAkAAAAAAAAAAAAiwB0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-27T14:09:32.438Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T14:09:32.438Z"
             },
             {
               "$type": "Document",
@@ -84,8 +86,7 @@
               "RelativeToolTip": "camera\\camera.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-27T14:08:54.273Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T14:08:54.273Z"
             },
             {
               "$type": "Document",
@@ -97,8 +98,7 @@
               "RelativeToolTip": "audio\\audio.cpp",
               "ViewState": "AgIAACkAAAAAAAAAAAAiwEcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-27T14:08:39.045Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T14:08:39.045Z"
             },
             {
               "$type": "Document",
@@ -110,8 +110,7 @@
               "RelativeToolTip": "audio\\audio.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-03-27T14:08:30.218Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T14:08:30.218Z"
             },
             {
               "$type": "Document",
@@ -123,12 +122,7 @@
               "RelativeToolTip": "cutscene\\cutscene.cpp",
               "ViewState": "AgIAAIkAAAAAAAAAAAAiwKEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-27T13:24:53.475Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "WhenOpened": "2026-03-27T13:24:53.475Z"
             },
             {
               "$type": "Document",
@@ -140,8 +134,7 @@
               "RelativeToolTip": "level\\level.cpp",
               "ViewState": "AgIAAGYAAAAAAAAAAAAiwIMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-27T13:40:24.338Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T13:40:24.338Z"
             },
             {
               "$type": "Document",
@@ -153,8 +146,7 @@
               "RelativeToolTip": "enemy\\enemy.cpp",
               "ViewState": "AgIAAFgAAAAAAAAAAAAiwG0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-27T13:22:52.266Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T13:22:52.266Z"
             },
             {
               "$type": "Document",
