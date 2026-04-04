@@ -1,44 +1,44 @@
 #include <cstdio>
 #include "level.h"
 
-// This function clears the old map and scans a new image to create the world
+// ============================================================================
+// LEVEL LOAD: Reads the invisible logic map and builds the level
+// ============================================================================
 void LevelLoad(Level* level, EnemyManager* enemies, int levelID)
 {
-    // RESET: Clear the current world data
+    // Reset barriers and enemies for the new level
     level->barrierCount = 0;
     enemies->count = 0;
     level->currentLevel = levelID;
 
-    // Safety: Reset portal and spawn to prevent "ghost" data from previous levels
-    level->portal = { 0, 0, 0, 0 };
-    level->playerSpawn = { 400, 300 };
-
     char mapPath[64];
     char logicPath[64];
 
-    // FORMAT: Create the file paths for the artwork and the logic map
+    // Find the correct image files based on the level number
     snprintf(mapPath, sizeof(mapPath), "assets/maps/level%d.png", levelID);
     snprintf(logicPath, sizeof(logicPath), "assets/maps/level%d_logic.png", levelID);
 
-    // LOAD: Bring the visual map texture into VRAM
+    // Load the visual background players will actually see
     level->mapTexture = LoadTexture(mapPath);
 
-    // LOAD IMAGE: Bring the logic map into CPU memory so we can check pixel colors
+    // Load the invisible logic map that the computer will read
     Image logicMap = LoadImage(logicPath);
-
-    // SAFETY CHECK: If the level file is missing (e.g., Level 4), stop here to prevent a crash
     if (logicMap.data == NULL)
     {
-        TraceLog(LOG_ERROR, "CRITICAL: LOGIC MAP FAILED TO LOAD FOR LEVEL %d", levelID);
+        TraceLog(LOG_ERROR, "LOGIC MAP FAILED TO LOAD");
         return;
     }
 
-    // PIXEL DATA: Get a list of every pixel color in the image
+    // Extract every single pixel color from the logic map
     Color* pixels = LoadImageColors(logicMap);
+
     level->width = logicMap.width;
     level->height = logicMap.height;
 
-    // --- MAP SCANNER (Restored your original horizontal merging logic) ---
+    bool playerSpawnSet = false;
+    bool portalSet = false;
+
+    // Scan the image pixel by pixel (Left to Right, Top to Bottom)
     for (int y = 0; y < logicMap.height; y++)
     {
         int x = 0;
@@ -46,12 +46,13 @@ void LevelLoad(Level* level, EnemyManager* enemies, int levelID)
         {
             Color c = pixels[y * logicMap.width + x];
 
-            // WALL DETECTION (Black pixels)
+            // 1. WALLS (Black Pixels: R<10, G<10, B<10)
             if (c.r < 10 && c.g < 10 && c.b < 10)
             {
                 int startX = x;
 
-                // MERGE: Keep moving right as long as we see black pixels to create one long wall box
+                // Optimization: Instead of making a 1x1 block for every black pixel,
+                // we stretch it sideways to make one long wall block!
                 while (x < logicMap.width)
                 {
                     Color wc = pixels[y * logicMap.width + x];
@@ -59,74 +60,186 @@ void LevelLoad(Level* level, EnemyManager* enemies, int levelID)
                     x++;
                 }
 
-                // Add the merged wall to our collision list
+                int width = x - startX;
+
                 if (level->barrierCount < MAX_BARRIERS)
                 {
-                    level->barriers[level->barrierCount++].rect = { (float)startX, (float)y, (float)(x - startX), 1 };
+                    level->barriers[level->barrierCount++].rect =
+                    {
+                        (float)startX, (float)y, (float)width, 1.0f
+                    };
                 }
             }
-            else // NON-WALL OBJECTS
+            else
             {
-                // Green pixel = Player starting position
-                if (c.g > 200 && c.r < 50 && c.b < 50) {
-                    level->playerSpawn = { (float)x, (float)y };
-                }
-                // Red pixel = Slime monster spawn
-                else if (c.r > 200 && c.g < 50 && c.b < 50) {
-                    if (enemies->count < MAX_ENEMIES) EnemyInit(&enemies->enemies[enemies->count++], { (float)x, (float)y }, ENEMY_SLIME);
-                }
-                // Magenta pixel = Boss 1 spawn
-                else if (c.r > 200 && c.g < 50 && c.b > 200) {
-                    if (enemies->count < MAX_ENEMIES) EnemyInit(&enemies->enemies[enemies->count++], { (float)x, (float)y }, ENEMY_BOSS1);
-                }
-                // Yellow pixel = Boss 2 spawn
-                else if (c.r > 200 && c.g > 200 && c.b < 50) {
-                    if (enemies->count < MAX_ENEMIES) EnemyInit(&enemies->enemies[enemies->count++], { (float)x, (float)y }, ENEMY_BOSS2);
-                }
-                // Blue pixel = Level Exit Portal
-                else if (c.b > 200 && c.r < 50 && c.g < 50) {
-                    level->portal = { (float)x, (float)y, 200, 60 };
-                }
+                float worldX = (float)x;
+                float worldY = (float)y;
 
-                x++; // Move to the next pixel
+                // 2. PLAYER SPAWN (Green Pixels)
+                if (!playerSpawnSet && c.g > 200 && c.r < 50 && c.b < 50)
+                {
+                    level->playerSpawn = { worldX, worldY };
+                    playerSpawnSet = true;
+                }
+                // 3. ENEMY SPAWNS (Red, Magenta, Yellow)
+                else if (c.r > 200 && c.g < 50 && c.b < 50)
+                {
+                    if (enemies->count < MAX_ENEMIES) {
+                        EnemyInit(&enemies->enemies[enemies->count], { worldX, worldY }, ENEMY_SLIME);
+                        enemies->count++;
+                    }
+                }
+                else if (c.r > 200 && c.g < 50 && c.b > 200)
+                {
+                    if (enemies->count < MAX_ENEMIES) {
+                        EnemyInit(&enemies->enemies[enemies->count], { worldX, worldY }, ENEMY_BOSS1);
+                        enemies->count++;
+                    }
+                }
+                else if (c.r > 200 && c.g > 200 && c.b < 50)
+                {
+                    if (enemies->count < MAX_ENEMIES) {
+                        EnemyInit(&enemies->enemies[enemies->count], { worldX, worldY }, ENEMY_BOSS2);
+                        enemies->count++;
+                    }
+                }
+                // 4. PORTAL (Blue Pixels)
+                else if (!portalSet && c.b > 200 && c.r < 50 && c.g < 50)
+                {
+                    level->portal = { worldX, worldY, 200.0f, 60.0f };
+                    portalSet = true;
+                }
+                x++;
             }
         }
     }
 
-    UnloadImageColors(pixels); // Cleanup the pixel list
-    UnloadImage(logicMap);      // Cleanup the temporary image
+    // Clean up memory
+    UnloadImageColors(pixels);
+    UnloadImage(logicMap);
 }
 
-// Logic to check for collisions with walls and the portal
+
+// ============================================================================
+// LEVEL UPDATE: Handles all Physics, Wall Sliding, and Collision
+// ============================================================================
 bool LevelUpdate(Level* level, Player* player)
 {
-    Rectangle playerRect = { player->pos.x, player->pos.y, 50, 50 };
-
-    for (int i = 0; i < level->barrierCount; i++)
-    {
-        // If the player hits a wall box, undo their last movement
-        if (CheckCollisionRecs(playerRect, level->barriers[i].rect))
-        {
-            player->pos = player->prevPos;
+    // A quick helper function. We give it an X and Y, and it creates a tiny 30x30 
+    // hitbox in the center of the player, then checks if it touches any walls.
+    auto IsColliding = [&](float testX, float testY) {
+        Rectangle box = { testX + 10.0f, testY + 10.0f, 30.0f, 30.0f };
+        for (int i = 0; i < level->barrierCount; i++) {
+            if (CheckCollisionRecs(box, level->barriers[i].rect)) return true;
         }
+        return false;
+        };
 
-        // If an arrow hits a wall, destroy the arrow
-        if (player->arrowActive && CheckCollisionPointRec(player->arrowPos, level->barriers[i].rect))
+    // Where the player WANTS to go, versus where they STARTED this frame
+    float targetX = player->pos.x;
+    float targetY = player->pos.y;
+    float startX = player->prevPos.x;
+    float startY = player->prevPos.y;
+
+    // ------------------------------------------------------------------------
+    // FIX 1: HORIZONTAL (X-AXIS) COLLISION & NUDGING
+    // ------------------------------------------------------------------------
+    if (targetX != startX)
+    {
+        // If moving Left/Right hits a wall...
+        if (IsColliding(targetX, startY))
         {
-            player->arrowActive = false;
+            bool nudged = false;
+
+            // Try pushing the player slightly Up or Down (1 to 8 pixels).
+            // This allows them to seamlessly slip past rough bumps on the logic map!
+            for (float n = 1.0f; n <= 8.0f; n += 1.0f)
+            {
+                if (!IsColliding(targetX, startY - n)) { // Pushed Up cleared it!
+                    startY -= n; targetY -= n; nudged = true; break;
+                }
+                if (!IsColliding(targetX, startY + n)) { // Pushed Down cleared it!
+                    startY += n; targetY += n; nudged = true; break;
+                }
+            }
+
+            // If the bump was bigger than 8 pixels, it's a real solid wall. Stop X movement.
+            if (!nudged) targetX = startX;
         }
     }
 
-    // Exit portal check: Returns true if player overlaps portal and presses E
-    if (CheckCollisionRecs(playerRect, level->portal) && IsKeyPressed(KEY_E))
+    // ------------------------------------------------------------------------
+    // FIX 2: VERTICAL (Y-AXIS) COLLISION & NUDGING
+    // Notice we use targetX here. This allows us to smoothly slide diagonally!
+    // ------------------------------------------------------------------------
+    if (targetY != startY)
     {
-        return true;
+        // If moving Up/Down hits a wall...
+        if (IsColliding(targetX, targetY))
+        {
+            bool nudged = false;
+
+            // Try pushing the player slightly Left or Right (1 to 8 pixels)
+            for (float n = 1.0f; n <= 8.0f; n += 1.0f)
+            {
+                if (!IsColliding(targetX - n, targetY)) { // Pushed Left cleared it!
+                    targetX -= n; nudged = true; break;
+                }
+                if (!IsColliding(targetX + n, targetY)) { // Pushed Right cleared it!
+                    targetX += n; nudged = true; break;
+                }
+            }
+
+            // If it's a real wall, stop Y movement.
+            if (!nudged) targetY = startY;
+        }
+    }
+
+    // Apply the final, clean, bump-free positions back to the player!
+    player->pos.x = targetX;
+    player->pos.y = targetY;
+
+    // ------------------------------------------------------------------------
+    // ARROW & PORTAL COLLISION
+    // ------------------------------------------------------------------------
+
+    // Check if the player's flying arrow hit a wall
+    for (int i = 0; i < level->barrierCount; i++)
+    {
+        if (player->arrowActive)
+        {
+            // Point collision is used because the arrow tip is just one exact pixel
+            if (CheckCollisionPointRec(player->arrowPos, level->barriers[i].rect))
+            {
+                player->arrowActive = false;
+            }
+        }
+    }
+
+    // Check if the player is touching the exit portal
+    Rectangle portalBox = { player->pos.x, player->pos.y, 50.0f, 50.0f };
+    if (CheckCollisionRecs(portalBox, level->portal))
+    {
+        if (IsKeyPressed(KEY_E))
+            return true; // Triggers level transition in main.cpp
     }
 
     return false;
 }
 
+// ============================================================================
+// LEVEL DRAW: Renders the map and debug shapes
+// ============================================================================
 void LevelDraw(Level* level)
 {
-    DrawTexture(level->mapTexture, 0, 0, WHITE); // Draw the artwork
+    // Draw the beautiful background texture
+    DrawTexture(level->mapTexture, 0, 0, WHITE);
+
+    // Uncomment these below if you ever need to see the invisible collision 
+    // boxes while playtesting your levels!
+
+    // for (int i = 0; i < level->barrierCount; i++) {
+    //     DrawRectangleLinesEx(level->barriers[i].rect, 1, RED);
+    // }
+    // DrawRectangleLinesEx(level->portal, 2, BLUE);
 }

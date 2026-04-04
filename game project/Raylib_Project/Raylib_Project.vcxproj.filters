@@ -60,9 +60,6 @@
     <ClCompile Include="level\level.cpp">
       <Filter>Source Files\level</Filter>
     </ClCompile>
-    <ClCompile Include="core\save.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
     <ClCompile Include="player\player.cpp">
       <Filter>Source Files\player</Filter>
     </ClCompile>
@@ -88,9 +85,6 @@
     </ClInclude>
     <ClInclude Include="level\level.h">
       <Filter>Source Files\level</Filter>
-    </ClInclude>
-    <ClInclude Include="core\save.h">
-      <Filter>Source Files\core</Filter>
     </ClInclude>
     <ClInclude Include="player\player.h">
       <Filter>Source Files\player</Filter>
