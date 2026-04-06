@@ -1,86 +1,114 @@
-This is a comprehensive `README.md` file tailored for your project. It explains the story, the features you've implemented (like the Save and Difficulty systems), and how the code is structured so that others (or future you) can understand the project quickly.
 
-***
+Here is the raw Markdown text. You can click the "Copy code" button at the top right of the box below, and paste it directly into your README.md file!
+code
+Markdown
+# 📜 Game Design & Implementation Document
 
-# Warmroom: The Last Hunter
+**Project:** Warmroom: The Last Hunter  
+**Engine:** Raylib (C++14)  
+**Date:** April 2026  
 
-**Warmroom** is a 2D top-down dungeon crawler built in **C++** using the **Raylib** library. You play as the last surviving Hunter of the Warmroom Civilization, tasked with reclaiming the Stellar Shards from the invading Randy Civilization to reignite the Stellar Core and save planet Aether.
+## 1. Project Overview & Lore
+**Warmroom: The Last Hunter** is a 2D top-down action-adventure game. 
 
-## 📖 The Story
-On planet Aether, the Warmroom Civilization flourished for a millennium, sustained by the power of the **Stellar Core**. The Randy Civilization descended from deep space to plunder this energy, shattering the Core into fragments. These shards gave birth to Feral Beasts, pushing Warmroom to the edge of extinction. 
-
-Out of 20 elite Hunters, 19 have fallen. **You are the last.**
-
----
-
-## 🎮 Gameplay Features
-*   **Dynamic Combat:** Use a bow and arrow with orbit-based aiming.
-*   **Pixel-Perfect Collision:** Arrows only register hits on the actual visible pixels of an enemy sprite, not just their "box."
-*   **Difficulty System:** 
-    *   **Normal:** Standard enemy speed and health.
-    *   **Hard:** Enemies move **2x faster** and have **2x more health**.
-*   **Save & Continue:** The game automatically saves your progress whenever you enter a new level, including your difficulty setting and "Missed Enemy" count.
-*   **Branching Endings:** 
-    *   **Good Ending:** Reclaim the shards and defeat Randy while clearing all feral beasts.
-    *   **Bad Ending:** Defeat Randy but leave monsters roaming the ruins.
-*   **Cinematic Cutscenes:** A custom typewriter-style dialogue system with color-coded text (Sky Blue for the Guide, Yellow for the Hunter).
+**The Lore:** On planet Aether, the Warmroom Civilization thrived on the power of the Stellar Core until the Randy Civilization invaded and shattered it, releasing Feral Beasts. You play as the last surviving Hunter of a 20-man elite squad. Your mission is to retrieve the scattered Stellar Shards, defeat Randy, and save your civilization.
 
 ---
 
-## ⌨️ Controls
-| Action | Key / Input |
-| :--- | :--- |
-| **Movement** | `W` `A` `S` `D` |
-| **Aim** | Mouse Movement |
-| **Shoot Arrow** | `Left Click` |
-| **Interact (Portal)** | `E` |
-| **Advance Dialogue** | `ENTER` |
-| **Pause Game** | `ESC` |
+## 2. System Architecture (General Framework)
+To prevent messy, hard-to-read code, our game is divided into strictly decoupled modules. `main.cpp` acts as the central conductor, managing the Game State and passing data between modules via pointers. 
 
----
-
-## 🛠️ Technical Details
-### Smart Screen Scaling
-The game is rendered at a base resolution of **800x600** into a `RenderTexture2D`. It then uses mathematical letterboxing to scale that image to fit any window size (resizable) while maintaining the original aspect ratio and "pixel-art" sharpness.
-
-### Save System
-Data is stored in `save.dat` using a binary `SaveData` struct:
-```cpp
-typedef struct {
-    int currentLevel;
-    int missedEnemies;
-    float difficulty;
-    bool exists;
-} SaveData;
+### Module Interaction Diagram:
+```text
+                     +---------------------------+
+                     |  main.cpp                 |
+                     |  (Game Loop & States)     |
+                     +-------------+-------------+
+                                   |
+       +---------------+-----------+-----------+---------------+
+       |               |                       |               |
+       v               v                       v               v
++------------+  +--------------+       +--------------+  +-------------+
+| player.cpp |  | enemy.cpp    |       | level.cpp    |  | audio.cpp   |
+| (Input &   |  | (AI, Hitbox, |       | (Wall logic, |  | (BGM, SFX,  |
+| Animation) |  |  Health)     |       |  Spawns)     |  |  Volumes)   |
++------------+  +--------------+       +--------------+  +-------------+
+       |               |                       |                |
+       +---------------+-----------------------+                v
+                       |                                +--------------+
+                       v                                | cutscene.cpp |
+             +--------------------+                     | (Lore & Text)|
+             | raylib.h (Engine)  |                     +--------------+
+             +--------------------+
 ```
+## 3. Key Data Structures
+Our game uses specific data structures to maximize memory efficiency and prevent crashes.
+A. EnemyManager (Texture Caching)
+Instead of every Slime or Boss loading its own image into the computer's RAM, the EnemyManager loads the textures exactly once. The individual Enemy structs only hold lightweight data (HP, X/Y position, and type) and share the Manager's textures for drawing.
+B. Cutscene (Heap Allocation)
+Our cutscene struct holds up to 32 blocks of 2048-character text arrays. Because this equals roughly 65 Kilobytes of data, creating it normally on the Stack would cause a Stack Overflow crash. We solved this by allocating it to the Heap using pointers:
+```
+// Safely allocated to the Heap to prevent memory crashes
+Cutscene* cutscene = new Cutscene(); 
 
-### Level Loading
-Maps are loaded using two images per level:
-1.  **Visual Map:** The actual artwork the player sees.
-2.  **Logic Map:** A color-coded pixel map where specific colors represent Walls (Black), Player Spawns (Green), Slimes (Red), and Portals (Blue).
+// ... later in shutdown ...
+delete cutscene; // Memory returned to the PC
+```
+## 4. Key Algorithms & Logic
 
----
+A. The "Logic Map" Level Parser
+Instead of manually typing out X/Y coordinates for every wall and enemy, level.cpp scans a hidden level_logic.png image pixel-by-pixel.
+Black Pixels (R:0, G:0, B:0) = Generates an invisible solid Wall.
+Green Pixels (G>200) = Sets the Player's spawn point.
+Red Pixels (R>200) = Spawns a Slime enemy.
+Magenta/Yellow Pixels = Spawns Boss 1 or Boss 2.
+[📸 Insert Screenshot Here: Show an image of your game level side-by-side with its colorful logic map]
 
-## 📁 File Structure
-*   `main.cpp`: The central game loop and state management.
-*   `player/`: Handles movement, bow rotation, and multi-layered animations (Legs/Body).
-*   `enemy/`: Contains the AI (Patrol vs Chase) and pixel-perfect hit detection.
-*   `level/`: Logic for loading maps and merging horizontal collision barriers.
-*   `cutscene/`: The "Typewriter" engine for story moments.
-*   `core/save.cpp`: The logic for reading and writing progress to the disk.
-*   `assets/`: Contains all `.png` textures, `.mp3` music, and `.txt` story files.
+B. Independent Wall Sliding & Nudging
+Top-down games often suffer from "sticky" walls. We solved this in LevelUpdate by checking the X-axis and Y-axis independently.
+If the player hits a wall while holding W and D, the game only cancels the blocked axis, allowing the player to seamlessly slide along the wall on the free axis. Furthermore, we implemented a "Nudge" loop that pushes the player 1-8 pixels to automatically slip past rough, jagged map edges.
 
----
+C. Pixel-Perfect Collision
+Because our Boss sprites are large 200x200 images with transparent empty corners, a standard box collision would cause arrows to hit "invisible air." We wrote an algorithm that mathematically maps the arrow's screen coordinates to the enemy's texture, checks the Alpha (transparency) channel of that specific pixel, and only deals damage if the pixel is solid.
 
-## 🚀 How to Build
-1.  Install **Visual Studio 2022**.
-2.  Install the **Raylib** library.
-3.  Open the `.sln` file.
-4.  Ensure the Working Directory is set to the project folder (so the game can find the `assets/` folder).
-5.  Press **F5** to compile and play.
+D. Secure Save/Load System
+To track the player's progress (Level, Missed Enemies, Difficulty), we implemented a Save/Load system. To comply with modern security standards and prevent C4996 buffer overflow vulnerabilities, we strictly used Microsoft's secure C-library functions (fopen_s, fscanf_s, and fprintf_s). The game automatically wipes the save file if the player dies or beats the game, preserving the hardcore roguelike integrity.
+[📸 Insert Screenshot Here: Show your Main Menu with the Continue button]
 
----
+## 5. Game States
+The game flow is controlled by a central GameState enum in main.cpp. This ensures that UI, gameplay, and cutscenes never overlap.
+```
+[ MENU_SETTINGS ] (Audio Sliders)
+              ^
+              | 
+              v
+         [ MENU ] --------> (Click Play) --------> [ DIFFICULTY ]
+              ^                                          |
+              |                                          v
+      (Game Over / Win)                       [ CUTSCENE (Text) ]
+     (Save File Wiped)                                   |
+              |                                          v
+              +<---------- [ PAUSE ] <------------[ GAMEPLAY ]
+                         (Press Escape)         (Player moves/fights)
+```
+## 6. AI Usage Acknowledgment
+In accordance with assignment requirements, we openly disclose the use of AI tools during the development of this project. AI was used as an educational and structural assistant in the following ways:
+Architecture & Refactoring: Assisted in decoupling our initial monolithic code into modular files (player.cpp, enemy.cpp, audio.cpp) via header inclusions.
+Algorithm Math: Provided the mathematical basis for the Pixel-Perfect Collision algorithm, the Screen Scaling (Letterboxing) math, and the independent Axis Wall-Sliding logic.
+Debugging Assistance: Helped diagnose and resolve complex Visual Studio C++ errors, such as LNK1104 missing library paths, LNK2005 duplicate symbol conflicts, and Stack Overflow (C6262) warnings by guiding us to use Heap pointers (new).
+Dialogue Formatting: Assisted in translating and formatting our original story concepts into structured text files compatible with our custom C++ typewriter cutscene system.
+Note: All core lore, level designs, artwork selection, and gameplay balancing were directed and implemented by the human development team.
 
-*“For Warmroom. For the fallen. Reclaim the light.”*
+## 7. Build & Run Instructions
+To run the game:
+Extract the submitted .zip folder.
+Ensure the assets/ folder is located exactly next to the .exe file.
+Double-click Warmroom_The_Last_Hunter.exe.
+(Note: The game was compiled using static libraries and the /SUBSYSTEM:windows linker command in Release mode, so no background console will appear and no extra DLLs are required).
 
-Created as a learning project using **C++ and Raylib**.
+## 8. Build & Run Instructions
+To run the game:
+Extract the submitted .zip folder.
+Ensure the assets/ folder is located exactly next to the .exe file.
+Double-click Warmroom_The_Last_Hunter.exe.
+(Note: The game was compiled using static libraries and the /SUBSYSTEM:windows linker command in Release mode, so no background console will appear and no extra DLLs are required).
