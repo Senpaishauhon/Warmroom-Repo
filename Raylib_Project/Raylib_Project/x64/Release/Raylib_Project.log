@@ -1,0 +1,16 @@
+﻿  audio.cpp
+  camera.cpp
+C:\Users\main\Downloads\game project\Raylib_Project\camera\camera.cpp(21,72): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\main\Downloads\game project\Raylib_Project\camera\camera.cpp(22,74): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  cutscene.cpp
+  enemy.cpp
+  level.cpp
+  main.cpp
+  player.cpp
+  menu.cpp
+  settings.cpp
+  Generating code
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+  All 36 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Raylib_Project.vcxproj -> C:\Users\main\Downloads\game project\Raylib_Project\x64\Release\Raylib_Project.exe

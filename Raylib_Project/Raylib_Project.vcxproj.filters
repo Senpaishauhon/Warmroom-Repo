@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\enemy">
+      <UniqueIdentifier>{0e59e8b5-3fc8-4037-837a-11cc97b2b76d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\level">
+      <UniqueIdentifier>{6bcaf29c-4b56-499a-8b1a-1916e4beb96f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\player">
+      <UniqueIdentifier>{8283d14a-a3a2-4bf4-b7e5-9fa724ac1ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ui">
+      <UniqueIdentifier>{0d519624-035a-402f-86e3-a72e7396c7ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{0f2f0ebd-01b5-4e26-a911-21e7046ca300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assets">
+      <UniqueIdentifier>{4200c8f0-1376-4de3-ac0a-a5ad65c68c98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assets\maps">
+      <UniqueIdentifier>{194431f3-e50e-453b-8291-4fc2863b6df8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cutscene">
+      <UniqueIdentifier>{cfa8c561-effe-40cf-a399-ef92987ff83b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\audio">
+      <UniqueIdentifier>{5d4edd6e-07c2-45c3-ab02-61786be37c7e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\menu.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\settings.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy\enemy.cpp">
+      <Filter>Source Files\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="level\level.cpp">
+      <Filter>Source Files\level</Filter>
+    </ClCompile>
+    <ClCompile Include="player\player.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\camera.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="cutscene\cutscene.cpp">
+      <Filter>Source Files\cutscene</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\audio.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ui\menu.h">
+      <Filter>Source Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\settings.h">
+      <Filter>Source Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy\enemy.h">
+      <Filter>Source Files\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="level\level.h">
+      <Filter>Source Files\level</Filter>
+    </ClInclude>
+    <ClInclude Include="player\player.h">
+      <Filter>Source Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\camera.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="cutscene\cutscene.h">
+      <Filter>Source Files\cutscene</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\audio.h">
+      <Filter>Source Files\audio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\maps\level1_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level1.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level6.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level5.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level4.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level3.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level2.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level2_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level3_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level4_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level5_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+    <Image Include="assets\maps\level6_logic.png">
+      <Filter>Source Files\assets\maps</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
